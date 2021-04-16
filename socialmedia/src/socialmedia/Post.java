@@ -11,7 +11,6 @@ public class Post {
     private int endorsements = 0;
 
 
-
     public Post(String content, String handle) {
         this.content = content;
         this.handle = handle;
