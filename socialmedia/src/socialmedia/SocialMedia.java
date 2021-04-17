@@ -16,8 +16,6 @@ public class SocialMedia implements SocialMediaPlatform {
 	public ArrayList<Account> allAccounts = new ArrayList<Account>();
 	public ArrayList<Post> allPosts = new ArrayList<Post>();
 
-
-
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
 
@@ -195,11 +193,51 @@ public class SocialMedia implements SocialMediaPlatform {
 	}
 
 	@Override
-	public int endorsePost(String handle, int id)
-			throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
-		// TODO Auto-generated method stub
+	public int endorsePost(String handle, int id) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
 		
-		return 0;
+		// checking the handle
+		Boolean isValidAccount = false;
+		Account account = null;
+		for(Account acc: allAccounts) {
+			if(acc.getHandle() == handle) {
+				account = acc;
+				isValid = true;
+			}
+		}
+		if(!isValidAccount) {
+			throw new HandleNotRecognisedException("Handle not found in list of accounts");
+		}
+
+		// checking the post id
+		Boolean isValidPost = false;
+		Post endorsed_post = null;
+		for(Post post: allPosts) {
+			if(post.getID() == id) {
+				endorsed_post = post; 
+				isValidPost = true;
+			}
+		}
+		if(!isValidPost) {
+			throw new PostIDNotRecognisedException("ID not found in the list of posts");
+		}
+
+		// checking if the post is an endorsement
+		if(allPosts.get(id -1).getClass() == Endorsement.class) {
+			throw new NotActionablePostException("You cannot endorse an endorsement!");
+		}
+
+		Endorsement endorsement = new Endorsement(handle, id);
+		String endorsement_content = "EP@" + account.getHandle() + ": " + endorsed_post.getContent();
+		endorsement.setContent(endorsement_content);
+
+		endorsed_post.addEndorsement(endorsement);
+
+		// setting the id of the endorsement, because it's a post (not sure if this will work)
+		int id = allPosts.size()+1;
+		endorsement.setID(id);
+		allPosts.add(endorsement);
+
+		return id;
 	}
 
 	@Override
