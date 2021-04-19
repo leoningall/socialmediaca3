@@ -15,5 +15,5 @@ public class Endorsement extends Post {
     public void setPostID(int postID) {this.postID = postID;}
 
     public String getContent() {return content;}
-    public void setContent(String content) {this.content = content};
+    public void setContent(String content) {this.content = content;}
 }

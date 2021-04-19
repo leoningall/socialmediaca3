@@ -255,8 +255,22 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		outputString = "";
+		//loop through all posts and find matching ID
+		for (Post i : allPosts) {
+			if (i.getID() == id) {
+				//if id matches, construct string to return and then return it
+				outputString += "\n\nID: " + id;
+				outputString += "\nAccount: " + i.getHandle();
+				outputString += "\nNo. endorsements: " + i.getEndorsements().length();
+				outputString += " | No. comments: " + i.getComments().length();
+				outputString += "\n" + i.getContent();
+				return outputString;
+			}
+		}
+		//if here is reached, then the id must be wrong
+		throw new PostIDNotRecognisedException("Post ID not recognised.");
+
 	}
 
 	@Override
