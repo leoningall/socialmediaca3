@@ -15,6 +15,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	
 	public ArrayList<Account> allAccounts = new ArrayList<Account>();
 	public ArrayList<Post> allPosts = new ArrayList<Post>();
+	public static int counter;
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
@@ -282,26 +283,46 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getNumberOfAccounts() {
-		// TODO Auto-generated method stub
-		return 0;
+		// return the length of the arraylist of accounts
+		return allAccounts.size();
 	}
 
 	@Override
 	public int getTotalOriginalPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		counter = 0;
+		for (Post i : allPosts) {
+			//if post isn't an endorsement or a comment, must be an original one
+			//so add one to the counter
+			if ((i.getClass != Endorsement.class) && (i.getClass != Comment.class)) {
+				counter++;
+			}
+		}
+		return counter;
 	}
+
 
 	@Override
 	public int getTotalEndorsmentPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		counter = 0;
+		for (Post i : allPosts) {
+			//check if an endorsement, or just a normal post
+			if (i.getClass() == Endorsement.class) {
+				counter++;
+			}
+		}
+		return counter;
 	}
 
 	@Override
 	public int getTotalCommentPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		counter = 0;
+		for (Post i : allPosts) {
+			//check if a comment, or just a normal post
+			if (i.getClass() == Comment.class) {
+				counter++;
+			}
+		}
+		return counter;
 	}
 
 	@Override
