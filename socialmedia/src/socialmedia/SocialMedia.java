@@ -276,12 +276,14 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		//check if post id is correct
 		Boolean isValidPostID = false;
-		for(Post post: allPosts) {
-			if(post.getID() == id) {
-				if ((post.getClass == Endorsement.class) {
+		Post post = null;
+		for(Post p: allPosts) {
+			if(p.getID() == id) {
+				if ((p.getClass == Endorsement.class) {
 					throw new NotActionablePostException("You cannt comment this post!");
 				}
 				isValidPostID = true;
+				p = post;
 				break;
 			}
 		}
@@ -291,6 +293,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		Comment comment = new Comment(handle, id, message);
 		comment.setID(allPosts.size());
+		post.addComment(comment);
 		allPosts.add(comment);
 			
 		return comment.getID();
