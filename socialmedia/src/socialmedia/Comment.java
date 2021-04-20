@@ -4,6 +4,7 @@ public class Comment extends Post {
 
     private int postID;
 
+
     // havent done this bit yet ...
     public Comment(String handle, int postID, String content) {
         super(content,handle);

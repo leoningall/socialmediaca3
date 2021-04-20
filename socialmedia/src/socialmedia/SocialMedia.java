@@ -80,7 +80,15 @@ public class SocialMedia implements SocialMediaPlatform {
 	public void removeAccount(int id) throws AccountIDNotRecognisedException {
 		
 		for (int i = 0; i < allAccounts.size(); i++) {
-			if (allAccounts.get(i).getID() == id) {
+			Account acc = allAccounts.get(i);
+			if (acc.getID() == id) {
+				// remove all posts of that user
+				for(Post post: allPosts) {
+					if(post.getHandle() == acc.getHandle()) {
+						deletePost(post.getID());
+					}
+				}
+				// remove the account
 				allAccounts.remove(i);
 				return;
 			}
@@ -92,8 +100,17 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void removeAccount(String handle) throws HandleNotRecognisedException {
+
 		for (int i = 0; i < allAccounts.size(); i++) {
-			if (allAccounts.get(i).getHandle() == handle) {
+			Account acc = allAccounts.get(i);
+			if (acc.getHandle() == handle) {
+				// remove all posts of that user
+				for(Post post: allPosts) {
+					if(post.getHandle() == handle) {
+						deletePost(post.getID());
+					}
+				}
+				// remove the account
 				allAccounts.remove(i);
 				return;
 			}
@@ -244,13 +261,44 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
-		// TODO Auto-generated method stub
-		return 0;
+
+		// check if the handle is correct
+		Boolean isValidAccount = false;
+		for(Account acc: allAccounts) {
+			if(acc.getHandle() == handle){
+				isValidAccount = true;
+				break;
+			}
+		}
+		if(!isValidAccount) {
+			throw new HandleNotRecognisedException("Handle not found in list of accounts");
+		}
+
+		//check if post id is correct
+		Boolean isValidPostID = false;
+		for(Post post: allPosts) {
+			if(post.getID() == id) {
+				if ((post.getClass == Endorsement.class) {
+					throw new NotActionablePostException("You cannt comment this post!");
+				}
+				isValidPostID = true;
+				break;
+			}
+		}
+		if(!isValidPostID) {
+			throw new PostIDNotRecognisedException("ID not found in the list of posts");
+		}
+
+		Comment comment = new Comment(handle, id, message);
+		comment.setID(allPosts.size());
+		allPosts.add(comment);
+			
+		return comment.getID();
 	}
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		// TODO Auto-generated method stub
+		// must delete all the comments and endorsements to that post as well
 
 	}
 
