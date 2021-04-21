@@ -7,7 +7,7 @@ public class Endorsement extends Post {
 
     // might need to inherit content, not re-initialising it... 
     public Endorsement(String handle, int postID) {
-        //make new post with empty content - this gets filled in
+        //make new post with empty content - said content gets filled in
         //as soon as it's made in the endorsePost method
         super("", handle);
         this.postID = postID;
@@ -18,4 +18,6 @@ public class Endorsement extends Post {
 
     public String getContent() {return content;}
     public void setContent(String content) {this.content = content;}
+
+    
 }

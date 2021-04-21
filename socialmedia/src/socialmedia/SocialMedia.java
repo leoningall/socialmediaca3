@@ -378,31 +378,57 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getMostEndorsedPost() {
-		// TODO Auto-generated method stub
-		return 0;
+		//Loops through all posts and keeps a track of the one with the longest endorsements ArrayList.
+		Post mostEndorsedPost = allPosts.get(0);
+		for (Post i : allPosts) {
+			if (i.getEndorsements.size() > mostEndorsedPost.getEndorsements.size()) {
+				mostEndorsedPost = i;
+			}
+		}
+		return mostEndorsedPost.getID();
 	}
 
 	@Override
 	public int getMostEndorsedAccount() {
-		// TODO Auto-generated method stub
-		return 0;
+		// Find account with the longest arraylist of endorsements.
+		// TODO There is maybe a better way to do this, its a tad ugly but should get the job done
+
+		//pick the first account in the list and assume it's the most endorsed
+		Account MostEndorsedAccount = allAccounts.get(0);
+		int endorseTotal;
+
+		for (Account i : allAccounts) {
+			//need to count up the endorsements on each post
+			endorseTotal = 0;
+			//for each of this user's posts, count and sum the endorsements they have
+			for (Post j : i.getPosts()) {
+				endorseTotal += j.getEndorsements().size();
+			}
+			//if this total is bigger than the current most, update most endorsed account
+			if (endorseTotal > mostEndorsedAccount.getEndorsements().size()) {
+				MostEndorsedAccount = i;
+			}
+		}
+
+		return MostEndorsedAccount.getID();
 	}
 
 	@Override
 	public void erasePlatform() {
-		// TODO Auto-generated method stub
+		// TODO Nuke everything
 
 	}
 
 	@Override
 	public void savePlatform(String filename) throws IOException {
-		// TODO Auto-generated method stub
+		// TODO Need to serialize arraylists of posts and accounts to a file
 
 	}
 
 	@Override
 	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
-		// TODO Auto-generated method stub
+		// TODO Need to read serialized objects from file, make them normal objects again
+		// and assign them to the 2 main arraylists
 
 	}
 
