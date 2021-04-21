@@ -219,7 +219,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for(Account acc: allAccounts) {
 			if(acc.getHandle() == handle) {
 				account = acc;
-				isValid = true;
+				isValidAccount = true;
 			}
 		}
 		if(!isValidAccount) {
@@ -279,7 +279,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		Post post = null;
 		for(Post p: allPosts) {
 			if(p.getID() == id) {
-				if ((p.getClass == Endorsement.class) {
+				if ((p.getClass() == Endorsement.class) {
 					throw new NotActionablePostException("You cannt comment this post!");
 				}
 				isValidPostID = true;
@@ -307,15 +307,15 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		outputString = "";
+		String outputString = "";
 		//loop through all posts and find matching ID
 		for (Post i : allPosts) {
 			if (i.getID() == id) {
 				//if id matches, construct string to return and then return it
 				outputString += "\n\nID: " + id;
 				outputString += "\nAccount: " + i.getHandle();
-				outputString += "\nNo. endorsements: " + i.getEndorsements().length();
-				outputString += " | No. comments: " + i.getComments().length();
+				outputString += "\nNo. endorsements: " + i.getEndorsements().size();
+				outputString += " | No. comments: " + i.getComments().size();
 				outputString += "\n" + i.getContent();
 				return outputString;
 			}
@@ -344,7 +344,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (Post i : allPosts) {
 			//if post isn't an endorsement or a comment, must be an original one
 			//so add one to the counter
-			if ((i.getClass != Endorsement.class) && (i.getClass != Comment.class)) {
+			if ((i.getClass() != Endorsement.class) && (i.getClass() != Comment.class)) {
 				counter++;
 			}
 		}
