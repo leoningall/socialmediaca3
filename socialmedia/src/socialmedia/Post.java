@@ -67,7 +67,10 @@ public class Post {
     public ArrayList<Endorsement> getEndorsements() {
         return endorsements;
     }
-    public ArrayList<Endorsement> addEndorsement(Endorsement endorsement) {
+
+    
+    public void addEndorsement(Endorsement endorsement) {
+    //public ArrayList<Endorsement> addEndorsement(Endorsement endorsement) {
         endorsements.add(endorsement);
     }
 }

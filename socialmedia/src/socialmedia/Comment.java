@@ -20,7 +20,7 @@ public class Comment extends Post {
     public int getID() {return id;}
     public void setID(int id) {this.id = id;}
 
-    public ArrayList<Post> getComments() {return comments;}
+    public ArrayList<Comment> getComments() {return comments;}
     public void addComment(Comment comment) {comments.add(comment);}
     public void removeComment(Comment comment) {
         // iterate through the list of comments

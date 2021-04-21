@@ -279,7 +279,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		Post post = null;
 		for(Post p: allPosts) {
 			if(p.getID() == id) {
-				if ((p.getClass() == Endorsement.class) {
+				if (p.getClass() == Endorsement.class) {
 					throw new NotActionablePostException("You cannt comment this post!");
 				}
 				isValidPostID = true;
