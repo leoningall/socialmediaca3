@@ -453,15 +453,37 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void savePlatform(String filename) throws IOException {
-		// TODO Need to serialize arraylists of posts and accounts to a file
-
+		try {
+			FileOutputStream fileOut = new FileOutputStream(filename);
+			ObjectOutputStream objectOut = new ObjectOutputStream(fileout);
+			ArrayList<Object> output = new ArrayList<>();
+			output.add(allAccounts);
+			output.add(allPosts);
+			objectOut.writeObject(output);
+			objectOut.close();
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
-		// TODO Need to read serialized objects from file, make them normal objects again
-		// and assign them to the 2 main arraylists
-
+		ArrayList<Object> read = null;
+		try {
+			FileInputStream fileIn = new FileInputStream(filename);
+			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+			read = (ArrayList<Object>) objectIn.readObject();
+			objectIn.close();
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		allAccounts = (ArrayList<Account>) read.get(0);
+		allPosts = (ArrayList<Post>) read.get(1);
 	}
-
 }
