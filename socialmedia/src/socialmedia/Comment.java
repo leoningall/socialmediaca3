@@ -6,7 +6,7 @@ public class Comment extends Post {
 
     private int postID;
     private int id;
-    private ArrayList<Comment> comments = new ArrayList<Comment>();
+    private ArrayList<Post> children = new ArrayList<Post>();
 
     // havent done this bit yet ...
     public Comment(String handle, int postID, String content) {
@@ -20,23 +20,27 @@ public class Comment extends Post {
     public int getID() {return id;}
     public void setID(int id) {this.id = id;}
 
-    public ArrayList<Comment> getComments() {return comments;}
-    public void addComment(Comment comment) {comments.add(comment);}
-    public void removeComment(Comment comment) {
+    public ArrayList<Post> getChildren() {return children;}
+    public void addChild(Post post) {children.add(post);}
+    
+    /**
+     * public void removeChild(Post post) {
         // iterate through the list of comments
-        for(int i=0; i<comments.size(); i++) {
+        for(int i=0; i<children.size(); i++) {
             // if the comment matches
-            if(comments.get(i) == comment) {
+            if(children.get(i) == post) {
                 // if that comment has comments
-                if(comment.getComments().size() > 0) {
+                if(post.getChildren().size() > 0) {
                     // iterate through that list
-                    for(Comment c: comment.getComments()) {
+                    for(Post p: post.getChildren()) {
                         // recursively remove those comments 
-                        removeComment(c);
+                        removeChild(p);
                     }
                 }
-                comments.remove(comments.get(i));
+                children.remove(children.get(i));
             }
         }
     }
+     */
+    
 }

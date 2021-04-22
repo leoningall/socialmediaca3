@@ -4,6 +4,7 @@ public class Endorsement extends Post {
 
     private int postID;
     private String content;
+    private int id;
 
     // might need to inherit content, not re-initialising it... 
     public Endorsement(String handle, int postID) {
@@ -13,6 +14,9 @@ public class Endorsement extends Post {
         this.postID = postID;
     }
 
+    public int getID() {return id;}
+    public void setID(int id) {this.id = id;}
+    
     public int getPostID() {return postID;}
     public void setPostID(int postID) {this.postID = postID;}
 

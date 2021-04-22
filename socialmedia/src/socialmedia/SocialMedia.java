@@ -85,6 +85,9 @@ public class SocialMedia implements SocialMediaPlatform {
 				// remove all posts of that user
 				for(Post post: allPosts) {
 					if(post.getHandle() == acc.getHandle()) {
+						//for(Post child: post.getChildren()) {
+						//	post.removeChild(child);
+						//}
 						deletePost(post.getID());
 					}
 				}
@@ -107,6 +110,9 @@ public class SocialMedia implements SocialMediaPlatform {
 				// remove all posts of that user
 				for(Post post: allPosts) {
 					if(post.getHandle() == handle) {
+						//for(Post child: post.getChildren()) {
+						//	post.removeChild(child);
+						//}
 						deletePost(post.getID());
 					}
 				}
@@ -153,7 +159,6 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 
 		throw new HandleNotRecognisedException("Handle not found in list of accounts.");
-
 	}
 
 	@Override
@@ -194,18 +199,14 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new HandleNotRecognisedException("Handle not found in list of accounts");
 		}
 
-		
-		Post post = new Post(handle, message);
-
 		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
+				int id = allPosts.size();
+				Post post = new Post(message, handle);
+				post.setID(id);
 				acc.getPosts().add(post);
 			}
-		}
-
-		int id = allPosts.size()+1;
-		post.setID(id);
-		allPosts.add(post);		
+		}	
 
 		return id;
 	}
@@ -245,14 +246,16 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 
 		Endorsement endorsement = new Endorsement(handle, id);
+
+		// create the endorsement content and set it.
 		String endorsement_content = "EP@" + account.getHandle() + ": " + endorsed_post.getContent();
 		endorsement.setContent(endorsement_content);
-
-		endorsed_post.addEndorsement(endorsement);
-
-		// setting the id of the endorsement, because it's a post (not sure if this will work)
-		int id = allPosts.size()+1;
+		// set the id.
+		int id = allPosts.size();
 		endorsement.setID(id);
+		// add the endorsement as a child of the post it is endorsing.
+		endorsed_post.addChild(endorsement);
+		// add the endorsement to the list of posts.
 		allPosts.add(endorsement);
 
 		return id;
@@ -262,6 +265,9 @@ public class SocialMedia implements SocialMediaPlatform {
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
 
+		// theres an error in here that fucks up everything, and makes all the throwing Exceptions go white.
+	
+		
 		// check if the handle is correct
 		Boolean isValidAccount = false;
 		for(Account acc: allAccounts) {
@@ -270,7 +276,7 @@ public class SocialMedia implements SocialMediaPlatform {
 				break;
 			}
 		}
-		if(!isValidAccount) {
+		if(isValidAccount == false) {
 			throw new HandleNotRecognisedException("Handle not found in list of accounts");
 		}
 
@@ -278,6 +284,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		Boolean isValidPostID = false;
 		Post post = null;
 		for(Post p: allPosts) {
+			// checks 
 			if(p.getID() == id) {
 				if (p.getClass() == Endorsement.class) {
 					throw new NotActionablePostException("You cannt comment this post!");
@@ -287,13 +294,14 @@ public class SocialMedia implements SocialMediaPlatform {
 				break;
 			}
 		}
-		if(!isValidPostID) {
+		if(isValidPostID == false) {
 			throw new PostIDNotRecognisedException("ID not found in the list of posts");
 		}
 
 		Comment comment = new Comment(handle, id, message);
 		comment.setID(allPosts.size());
-		post.addComment(comment);
+
+		post.addChild(comment);
 		allPosts.add(comment);
 			
 		return comment.getID();
@@ -301,8 +309,33 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		// must delete all the comments and endorsements to that post as well
-
+		// just realised this is wrong, didnt read the spec properly.
+		Boolean isValid = false;
+		for(int i = 0: i > allPosts.size(): i++) {
+			Post post = allPosts.get(i);
+			if(post.getID() == id) {
+				if(post.getChildren().size() > 0) {
+					Post newPost = new Post("The original content was removed from the system and is no longer available.");
+					newPost.setID(allPosts.size());
+					for(Post p: post.getChildren()) {
+						if(p.getClass() == Endorsement.class) {
+							post.removeEndoresement(p);
+						}
+						else { 
+							if(p.getClass() == Comment.class) {
+								p.setPostID(newPost.getID());
+							}
+						}
+					}
+					allPosts.remove(post);
+				}
+			isValid = true;
+			return;
+			}
+		}
+		if(!isValid) {
+			throw new PostIDNotRecognisedException("ID not found in the list of posts");
+		}
 	}
 
 	@Override
@@ -322,7 +355,6 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 		//if here is reached, then the id must be wrong
 		throw new PostIDNotRecognisedException("Post ID not recognised.");
-
 	}
 
 	@Override
@@ -350,7 +382,6 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 		return counter;
 	}
-
 
 	@Override
 	public int getTotalEndorsmentPosts() {
@@ -415,8 +446,9 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void erasePlatform() {
-		// TODO Nuke everything
-
+		allAccounts.clear();
+		allPosts.clear();
+		counter = 0;
 	}
 
 	@Override

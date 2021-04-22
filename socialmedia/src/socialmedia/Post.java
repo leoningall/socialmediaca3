@@ -6,14 +6,19 @@ public class Post {
 
     private String content;
     private String handle;
-    private ArrayList<Comment> comments = new ArrayList<Comment>();
+    private ArrayList<Post> children = new ArrayList<Post>();
     private int id;
     // added a list of endorsements, we might not need it, but its there just in case.
-    private ArrayList<Endorsement> endorsements = new ArrayList<Endorsement>();
 
     public Post(String content, String handle) {
         this.content = content;
         this.handle = handle;
+    }
+    /**
+     * This constructor is for generic posts.
+     */
+    public Post(String content) {
+        this.content = content;
     }
 
     public String getContent() {
@@ -37,40 +42,56 @@ public class Post {
         this.id = id;
     }
 
-    public ArrayList<Comment> getComments() {
-        return comments;
+    public ArrayList<Post> getChildren() {
+        return children;
     }
-    public void addComment(Comment comment) {
-        comments.add(comment);
+    public void addChild(Post post) {
+        children.add(post);
+    }
+    public void removeEndorsement(Endorsement endorsement) {
+        for(Endorsement e: children) {
+            if(endorsement == e) {
+                children.remove(e);
+            }
+        }
     }
     /**
-     * This probs doesnt work...
+     * I dont think this is needed anymore
      */
-    public void removeComment(Comment comment) {
+    /**
+     * public void removeChild(Post post) {
         // iterate through the list of comments
-        for(int i=0; i<comments.size(); i++) {
+        for(int i=0; i<children.size(); i++) {
             // if the comment matches
-            if(comments.get(i) == comment) {
+            if(children.get(i) == post) {
                 // if that comment has comments
-                if(comment.getComments().size() > 0) {
+                if(post.getChildren().size() > 0) {
                     // iterate through that list
-                    for(Comment c: comment.getComments()) {
+                    for(Post p: post.getChildren()) {
                         // recursively remove those comments 
-                        removeComment(c);
+                        removeChild(p);
                     }
                 }
                 comments.remove(comments.get(i));
             }
         }
     }
+     */
+    
     
     public ArrayList<Endorsement> getEndorsements() {
+        ArrayList<Endorsement> endorsements = new ArrayList<>();
+        for(Post post: children) {
+            if(post.getClass() == Endorsement.class) {
+                endorsements.add(post);
+            }
+        }
         return endorsements;
     }
-
+    /**
+     * public void addEndorsement(Endorsement endorsement) {
+        children.add(endorsement);
+        }
+     */
     
-    public void addEndorsement(Endorsement endorsement) {
-    //public ArrayList<Endorsement> addEndorsement(Endorsement endorsement) {
-        endorsements.add(endorsement);
-    }
 }
