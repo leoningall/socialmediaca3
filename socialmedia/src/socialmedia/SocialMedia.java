@@ -16,6 +16,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	public ArrayList<Account> allAccounts = new ArrayList<Account>();
 	public ArrayList<Post> allPosts = new ArrayList<Post>();
 	public static int counter;
+	public static StringBuilder childrenDetails; 
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
@@ -167,15 +168,15 @@ public class SocialMedia implements SocialMediaPlatform {
 			if (acc.getHandle() == handle) {
 				
 				System.out.println("\n\nID: " + Integer.toString(acc.getID()));
-				System.out.println("Handle: " + acc.getHandle());
+				if(acc.getHandle != null) {
+					System.out.println("Handle: " + acc.getHandle());
+				}
 				if (acc.getDescription() != null) {
 					System.out.println("Description: " + acc.getDescription());
 				}
 				System.out.println("Post Count: " + acc.getPosts().size());
-
-				//TODO: loop through accounts and see which are endorsements, sum them and print
-
 			}
+			throw new HandleNotRecognisedException("Handle not found in list of accounts.");
 		}
 		return null;
 	}
@@ -205,9 +206,9 @@ public class SocialMedia implements SocialMediaPlatform {
 				Post post = new Post(message, handle);
 				post.setID(id);
 				acc.getPosts().add(post);
+				allPosts.add(post);
 			}
 		}	
-
 		return id;
 	}
 
@@ -360,8 +361,52 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public StringBuilder showPostChildrenDetails(int id)
 			throws PostIDNotRecognisedException, NotActionablePostException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		/**
+		 * for(int = 0; i > allPosts.size(); i++) {
+			Post post = allPosts.get(i);
+			if(post.getID() == id) {
+				if(post.getChildren().size() > 0) {
+					for(Post child: post.getChildren()) {
+						showPostChildrenDetails(child.getID());	
+					}
+					childrenDetails.append(showIndividualPost(post.getID()));
+				}
+				childrenDetails.append(showIndividualPost(post.getID()));
+				
+			}
+
+		}			
+		String returnString = childrenDetails.toString();
+		childrenDetails = "";
+		return returnString;
+		 */
+		
+		boolean isValid = false;
+        StringBuilder childrenDetails = new StringBuilder();
+        for (Post post : allPosts) {
+            if (post.getId() == id) {
+                isValid = true;
+                childrenDetails.append(showIndividualPost(id) + "|" + "\n" + "| > ");
+            }
+        }
+        if (isValid) {
+            counter = 0;
+            while (counter < allPosts.size()) {
+				Post post = allPosts.get(counter);
+                if (post.getId() == id) {
+                    for (Post child : post.getChildren()) {
+						if(child.getClass() == Comment.class) {
+							childrenDetails.append(showPostChildrenDetails(child.getID()) + "\n" + "|" + "\n" + "| > ");
+						}
+                    }
+                }
+                counter++;
+            }
+            return childrenDetails;
+        } else {
+            throw new PostIDNotRecognisedException("post id does not exist");
+		}
 	}
 
 	@Override
