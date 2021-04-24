@@ -261,7 +261,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		return id;
 	}
-
+	
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
 			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {

@@ -10,48 +10,90 @@ public class Post {
     private int id;
     // added a list of endorsements, we might not need it, but its there just in case.
 
+    /**
+     * This is the contstructor method of Post
+     * @param content The content of the Post
+     * @param handle The handle of the Post
+     */
     public Post(String content, String handle) {
         this.content = content;
         this.handle = handle;
     }
     /**
      * This constructor is for generic posts.
+     * @param content The content of the Post
      */
     public Post(String content) {
         this.content = content;
     }
 
+    /**
+     * This gets the content of the Post
+     * @return content
+     */
     public String getContent() {
         return content;
     }
+    /**
+     * This sets the content of the Post
+     * @param content The content to be set
+     */
     public void setContent(String content) {
         this.content = content;
     }
 
+    /**
+     * This gets the handle of the Post
+     * @return handle 
+     */
     public String getHandle() {
         return handle;
     }
+    /**
+     * This sets the handle of the Post
+     * @param handle The handle to be set
+     */
     public void setHandle(String handle) {
         this.handle = handle;
     }
 
+    /**
+     * This gets the id of the Post
+    * @return id
+     */
     public int getID() {
         return id;
     }
+    /**
+     * This sets the id of the Post
+     * @param id The id to be set
+     */
     public void setID(int id) {
         this.id = id;
     }
 
+    /**
+     * This gets the ArrayList of children of the post
+     * @return children
+     */
     public ArrayList<Post> getChildren() {
         return children;
     }
+    /**
+     * This adds a child to the ArrayList
+     * @param post The post to be added
+     */
     public void addChild(Post post) {
         children.add(post);
     }
+    /**
+     * This removes an endorsement from the list of children
+     * @param endorsement The endorsement to be removed
+     */
     public void removeEndorsement(Endorsement endorsement) {
-        for(Endorsement e: children) {
-            if(endorsement == e) {
-                children.remove(e);
+        for(Post post: children) {
+            if(post.getClass() == Endorsement.class && post == endorsement) {
+                children.remove(post);
             }
         }
     }
@@ -78,7 +120,10 @@ public class Post {
     }
      */
     
-    
+    /**
+     * This gets an ArrayList of all the endorsements of this Post
+     * @return endorsements
+     */
     public ArrayList<Endorsement> getEndorsements() {
         ArrayList<Endorsement> endorsements = new ArrayList<>();
         for(Post post: children) {
