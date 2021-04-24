@@ -168,7 +168,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			if (acc.getHandle() == handle) {
 				
 				System.out.println("\n\nID: " + Integer.toString(acc.getID()));
-				if(acc.getHandle != null) {
+				if(acc.getHandle() != null) {
 					System.out.println("Handle: " + acc.getHandle());
 				}
 				if (acc.getDescription() != null) {
@@ -188,18 +188,6 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new InvalidPostException("Message must be between 1 and 100 characters.");
 		}
 
-		Boolean valid = false;
-
-		for (Account acc : allAccounts) {
-			if (acc.getHandle() == handle) {
-				valid = true;
-			}
-		}
-		
-		if (valid == false) {
-			throw new HandleNotRecognisedException("Handle not found in list of accounts");
-		}
-
 		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
 				int id = allPosts.size();
@@ -207,9 +195,13 @@ public class SocialMedia implements SocialMediaPlatform {
 				post.setID(id);
 				acc.getPosts().add(post);
 				allPosts.add(post);
+				return post.getID();
 			}
-		}	
-		return id;
+		}
+
+		//if here is reached, handle must be invalid
+		throw new HandleNotRecognisedException("Handle not found in list of accounts");
+		
 	}
 
 	@Override
@@ -252,8 +244,8 @@ public class SocialMedia implements SocialMediaPlatform {
 		String endorsement_content = "EP@" + account.getHandle() + ": " + endorsed_post.getContent();
 		endorsement.setContent(endorsement_content);
 		// set the id.
-		int id = allPosts.size();
-		endorsement.setID(id);
+		int idToAdd = allPosts.size();
+		endorsement.setID(idToAdd);
 		// add the endorsement as a child of the post it is endorsing.
 		endorsed_post.addChild(endorsement);
 		// add the endorsement to the list of posts.
@@ -312,7 +304,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	public void deletePost(int id) throws PostIDNotRecognisedException {
 		// just realised this is wrong, didnt read the spec properly.
 		Boolean isValid = false;
-		for(int i = 0: i > allPosts.size(): i++) {
+		for(int i = 0; i > allPosts.size(); i++) {
 			Post post = allPosts.get(i);
 			if(post.getID() == id) {
 				if(post.getChildren().size() > 0) {
@@ -320,9 +312,9 @@ public class SocialMedia implements SocialMediaPlatform {
 					newPost.setID(allPosts.size());
 					for(Post p: post.getChildren()) {
 						if(p.getClass() == Endorsement.class) {
-							post.removeEndoresement(p);
+							post.removeEndorsement(p);
 						}
-						else { 
+						else {
 							if(p.getClass() == Comment.class) {
 								p.setPostID(newPost.getID());
 							}
@@ -349,7 +341,7 @@ public class SocialMedia implements SocialMediaPlatform {
 				outputString += "\n\nID: " + id;
 				outputString += "\nAccount: " + i.getHandle();
 				outputString += "\nNo. endorsements: " + i.getEndorsements().size();
-				outputString += " | No. comments: " + i.getComments().size();
+				outputString += " | No. comments: " + i.getChildren().size();
 				outputString += "\n" + i.getContent();
 				return outputString;
 			}
@@ -385,7 +377,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		boolean isValid = false;
         StringBuilder childrenDetails = new StringBuilder();
         for (Post post : allPosts) {
-            if (post.getId() == id) {
+            if (post.getID() == id) {
                 isValid = true;
                 childrenDetails.append(showIndividualPost(id) + "|" + "\n" + "| > ");
             }
@@ -394,7 +386,7 @@ public class SocialMedia implements SocialMediaPlatform {
             counter = 0;
             while (counter < allPosts.size()) {
 				Post post = allPosts.get(counter);
-                if (post.getId() == id) {
+                if (post.getID() == id) {
                     for (Post child : post.getChildren()) {
 						if(child.getClass() == Comment.class) {
 							childrenDetails.append(showPostChildrenDetails(child.getID()) + "\n" + "|" + "\n" + "| > ");
@@ -457,7 +449,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		//Loops through all posts and keeps a track of the one with the longest endorsements ArrayList.
 		Post mostEndorsedPost = allPosts.get(0);
 		for (Post i : allPosts) {
-			if (i.getEndorsements.size() > mostEndorsedPost.getEndorsements.size()) {
+			if (i.getEndorsements().size() > mostEndorsedPost.getEndorsements().size()) {
 				mostEndorsedPost = i;
 			}
 		}
@@ -500,7 +492,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	public void savePlatform(String filename) throws IOException {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(filename);
-			ObjectOutputStream objectOut = new ObjectOutputStream(fileout);
+			ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
 			ArrayList<Object> output = new ArrayList<>();
 			output.add(allAccounts);
 			output.add(allPosts);
