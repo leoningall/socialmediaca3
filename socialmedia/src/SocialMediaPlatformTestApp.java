@@ -55,14 +55,22 @@ public class SocialMediaPlatformTestApp {
 
 		*/
 		try {
+			
 			platform.createAccount("coolman123");
 			platform.createPost("coolman123", "what a message");
 			platform.createAccount("greatdude456");
+			platform.commentPost("greatdude456", 1, "good post my friend");
+			platform.endorsePost("coolman123", 2);
+			platform.commentPost("greatdude456",1,"cracking");
+			platform.endorsePost("greatdude456", 1);
+			platform.createPost("greatdude456","pogchamp");
+			platform.endorsePost("coolman123", 6);
+
 
 			platform.testWorks();
 
-			platform.commentPost("greatdude456", 1, "good post my friend");
-			
+			platform.removeAccount("coolman123");
+
 			platform.testWorks();
 
 		} catch (IllegalHandleException e) {
@@ -78,7 +86,5 @@ public class SocialMediaPlatformTestApp {
 		} catch (NotActionablePostException e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }

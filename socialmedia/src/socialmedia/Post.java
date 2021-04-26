@@ -140,4 +140,15 @@ public class Post {
         }
      */
     
+    public ArrayList<Comment> getComments() {
+        ArrayList<Comment> comments = new ArrayList<>();
+        for(Post post: children) {
+            if(post.getClass() == Comment.class) {
+                Comment e = (Comment)post;
+                comments.add(e);
+            }
+        }
+        return comments;
+    }
+
 }

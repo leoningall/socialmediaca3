@@ -21,7 +21,8 @@ public class SocialMedia implements SocialMediaPlatform {
 	public ArrayList<Account> allAccounts = new ArrayList<Account>();
 	public ArrayList<Post> allPosts = new ArrayList<Post>();
 	public static int counter;
-	public static StringBuilder childrenDetails; 
+	public static StringBuilder childrenDetails;
+	public static int postIDTally = 0;
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
@@ -206,7 +207,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
-				int id = allPosts.size();
+				int id = ++postIDTally;
 				Post post = new Post(message, handle);
 				post.setID(id);
 				acc.getPosts().add(post);
@@ -225,10 +226,8 @@ public class SocialMedia implements SocialMediaPlatform {
 		
 		// checking the handle
 		Boolean isValidAccount = false;
-		Account account = null;
 		for(Account acc: allAccounts) {
 			if(acc.getHandle() == handle) {
-				account = acc;
 				isValidAccount = true;
 			}
 		}
@@ -241,7 +240,10 @@ public class SocialMedia implements SocialMediaPlatform {
 		Post endorsed_post = null;
 		for(Post post: allPosts) {
 			if(post.getID() == id) {
-				endorsed_post = post; 
+				if (post.getClass() == Endorsement.class) {
+					throw new NotActionablePostException("You cannot endorse an endorsement!");
+				}
+				endorsed_post = post;
 				isValidPost = true;
 			}
 		}
@@ -250,20 +252,26 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 
 		// checking if the post is an endorsement
-		if(allPosts.get(id -1).getClass() == Endorsement.class) {
-			throw new NotActionablePostException("You cannot endorse an endorsement!");
-		}
 
 		Endorsement endorsement = new Endorsement(handle, id);
 
 		// create the endorsement content and set it.
-		String endorsement_content = "EP@" + account.getHandle() + ": " + endorsed_post.getContent();
+		String endorsee = "";
+		for (Post i : allPosts) {
+			if (i.getID() == id) {
+				endorsee = i.getHandle();
+			}
+		}
+
+		String endorsement_content = "EP@" + endorsee + ": " + endorsed_post.getContent();
 		endorsement.setContent(endorsement_content);
 		// set the id.
-		int idToAdd = allPosts.size();
+		int idToAdd = ++postIDTally;
 		endorsement.setID(idToAdd);
 		// add the endorsement as a child of the post it is endorsing.
-		endorsed_post.addChild(endorsement);
+		Post child = endorsement;
+		// endorsed_post.addChild(endorsement);
+		endorsed_post.addChild(child);
 		// add the endorsement to the list of posts.
 		allPosts.add(endorsement);
 
@@ -299,7 +307,7 @@ public class SocialMedia implements SocialMediaPlatform {
 					throw new NotActionablePostException("You cannt comment this post!");
 				}
 				isValidPostID = true;
-				p = post;
+				post = p;
 				break;
 			}
 		}
@@ -308,7 +316,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		}
 
 		Comment comment = new Comment(handle, id, message);
-		comment.setID(allPosts.size());
+		comment.setID(++postIDTally);
 
 		post.addChild(comment);
 		allPosts.add(comment);
@@ -325,7 +333,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			if(post.getID() == id) {
 				if(post.getChildren().size() > 0) {
 					Post newPost = new Post("The original content was removed from the system and is no longer available.");
-					newPost.setID(allPosts.size());
+					newPost.setID(++postIDTally);
 					for(Post p: post.getChildren()) {
 						if(p.getClass() == Endorsement.class) {
 							Endorsement endToAdd = (Endorsement)p;
@@ -346,7 +354,7 @@ public class SocialMedia implements SocialMediaPlatform {
 			}
 		}
 
-		throw new PostIDNotRecognisedException("ID not dound in the list of posts");
+		throw new PostIDNotRecognisedException("ID not found in the list of posts");
 
 		// if(!isValid) {
 		// 	throw new PostIDNotRecognisedException("ID not found in the list of posts");
@@ -364,7 +372,8 @@ public class SocialMedia implements SocialMediaPlatform {
 				outputString += "\n\nID: " + id;
 				outputString += "\nAccount: " + i.getHandle();
 				outputString += "\nNo. endorsements: " + i.getEndorsements().size();
-				outputString += " | No. comments: " + i.getChildren().size();
+				//check if each child is a comment
+				outputString += " | No. comments: " + i.getComments().size();
 				outputString += "\n" + i.getContent();
 				return outputString;
 			}
@@ -552,16 +561,25 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void testWorks() {
+
+		System.out.println(allPosts.size());
 		System.out.println("All Posts:\n\n");
 
 		for (Post i : allPosts) {
 			try {
-                showIndividualPost(i.getID());
+                System.out.println(showIndividualPost(i.getID()));
             } catch (PostIDNotRecognisedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 		}
+
+		// for (Post i : allPosts) {
+		// 	for (Post j : i.getChildren()) {
+		// 		System.out.println(j.getClass() == Endorsement.class);
+		// 	}
+		// 	System.out.println("\nnew post\n");
+		// }
 
 		System.out.println("All Accounts");
 
