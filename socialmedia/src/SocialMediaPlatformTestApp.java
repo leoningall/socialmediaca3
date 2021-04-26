@@ -1,7 +1,11 @@
 import socialmedia.AccountIDNotRecognisedException;
+import socialmedia.HandleNotRecognisedException;
 import socialmedia.SocialMedia;
 import socialmedia.IllegalHandleException;
 import socialmedia.InvalidHandleException;
+import socialmedia.InvalidPostException;
+import socialmedia.NotActionablePostException;
+import socialmedia.PostIDNotRecognisedException;
 import socialmedia.SocialMediaPlatform;
 
 /**
@@ -26,6 +30,8 @@ public class SocialMediaPlatformTestApp {
 
 		SocialMediaPlatform platform = new SocialMedia();
 
+		/*
+
 		assert (platform.getNumberOfAccounts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
 		assert (platform.getTotalOriginalPosts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
 		assert (platform.getTotalCommentPosts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
@@ -45,6 +51,32 @@ public class SocialMediaPlatformTestApp {
 			assert (false) : "InvalidHandleException thrown incorrectly";
 		} catch (AccountIDNotRecognisedException e) {
 			assert (false) : "AccountIDNotRecognizedException thrown incorrectly";
+		}
+
+		*/
+		try {
+			platform.createAccount("coolman123");
+			platform.createPost("coolman123", "what a message");
+			platform.createAccount("greatdude456");
+
+			platform.testWorks();
+
+			platform.commentPost("greatdude456", 1, "good post my friend");
+			
+			platform.testWorks();
+
+		} catch (IllegalHandleException e) {
+			e.printStackTrace();
+		} catch (InvalidHandleException e) {
+			e.printStackTrace();
+		} catch (InvalidPostException e) {
+			e.printStackTrace();
+		} catch (HandleNotRecognisedException e) {
+			e.printStackTrace();
+		} catch (PostIDNotRecognisedException e) {
+			e.printStackTrace();
+		} catch (NotActionablePostException e) {
+			e.printStackTrace();
 		}
 
 	}

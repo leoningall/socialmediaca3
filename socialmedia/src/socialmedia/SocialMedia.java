@@ -83,7 +83,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	}
 
 	@Override
-	public void removeAccount(int id) throws AccountIDNotRecognisedException{
+	public void removeAccount(int id) throws AccountIDNotRecognisedException {
 		
 		for (int i = 0; i < allAccounts.size(); i++) {
 			Account acc = allAccounts.get(i);
@@ -94,7 +94,12 @@ public class SocialMedia implements SocialMediaPlatform {
 						//for(Post child: post.getChildren()) {
 						//	post.removeChild(child);
 						//}
-						deletePost(post.getID());
+						try {
+                            deletePost(post.getID());
+                        } catch (PostIDNotRecognisedException e) {
+                            // if post id not recognized
+                            e.printStackTrace();
+                        }
 					}
 				}
 				// remove the account
@@ -119,7 +124,13 @@ public class SocialMedia implements SocialMediaPlatform {
 						//for(Post child: post.getChildren()) {
 						//	post.removeChild(child);
 						//}
-						deletePost(post.getID());
+
+						try {
+                            deletePost(post.getID());
+                        } catch (PostIDNotRecognisedException e) {
+                            // if post id not recognized
+                            e.printStackTrace();
+                        }
 					}
 				}
 				// remove the account
@@ -538,4 +549,26 @@ public class SocialMedia implements SocialMediaPlatform {
 		allAccounts = (ArrayList<Account>) read.get(0);
 		allPosts = (ArrayList<Post>) read.get(1);
 	}
+
+	@Override
+	public void testWorks() {
+		System.out.println("All Posts:\n\n");
+
+		for (Post i : allPosts) {
+			try {
+                showIndividualPost(i.getID());
+            } catch (PostIDNotRecognisedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+		}
+
+		System.out.println("All Accounts");
+
+		for (Account i : allAccounts) {
+			System.out.println(i.getHandle());
+		}
+
+	}
+
 }

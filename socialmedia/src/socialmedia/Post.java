@@ -128,7 +128,8 @@ public class Post {
         ArrayList<Endorsement> endorsements = new ArrayList<>();
         for(Post post: children) {
             if(post.getClass() == Endorsement.class) {
-                endorsements.add(post);
+                Endorsement e = (Endorsement)post;
+                endorsements.add(e);
             }
         }
         return endorsements;
