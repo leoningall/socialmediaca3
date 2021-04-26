@@ -1,6 +1,11 @@
 package socialmedia;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -78,7 +83,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	}
 
 	@Override
-	public void removeAccount(int id) throws AccountIDNotRecognisedException {
+	public void removeAccount(int id) throws AccountIDNotRecognisedException{
 		
 		for (int i = 0; i < allAccounts.size(); i++) {
 			Account acc = allAccounts.get(i);
@@ -302,8 +307,8 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		// just realised this is wrong, didnt read the spec properly.
-		Boolean isValid = false;
+		// TODO just realised this is wrong, didnt read the spec properly.
+		//Boolean isValid = false;
 		for(int i = 0; i > allPosts.size(); i++) {
 			Post post = allPosts.get(i);
 			if(post.getID() == id) {
@@ -312,23 +317,30 @@ public class SocialMedia implements SocialMediaPlatform {
 					newPost.setID(allPosts.size());
 					for(Post p: post.getChildren()) {
 						if(p.getClass() == Endorsement.class) {
-							post.removeEndorsement(p);
+							Endorsement endToAdd = (Endorsement)p;
+							post.removeEndorsement(endToAdd);
 						}
 						else {
 							if(p.getClass() == Comment.class) {
-								p.setPostID(newPost.getID());
+								Comment c = (Comment)p;
+								c.setPostID(newPost.getID());
 							}
 						}
 					}
 					allPosts.remove(post);
+					return;
 				}
-			isValid = true;
-			return;
+			// isValid = true;
+			// break;
 			}
 		}
-		if(!isValid) {
-			throw new PostIDNotRecognisedException("ID not found in the list of posts");
-		}
+
+		throw new PostIDNotRecognisedException("ID not dound in the list of posts");
+
+		// if(!isValid) {
+		// 	throw new PostIDNotRecognisedException("ID not found in the list of posts");
+		// }
+
 	}
 
 	@Override
@@ -462,23 +474,26 @@ public class SocialMedia implements SocialMediaPlatform {
 		// TODO There is maybe a better way to do this, its a tad ugly but should get the job done
 
 		//pick the first account in the list and assume it's the most endorsed
-		Account MostEndorsedAccount = allAccounts.get(0);
+		Account mostEndorsedAccount = allAccounts.get(0);
 		int endorseTotal;
 
 		for (Account i : allAccounts) {
 			//need to count up the endorsements on each post
 			endorseTotal = 0;
+			int mostEndorsements = 0;
 			//for each of this user's posts, count and sum the endorsements they have
 			for (Post j : i.getPosts()) {
 				endorseTotal += j.getEndorsements().size();
 			}
 			//if this total is bigger than the current most, update most endorsed account
-			if (endorseTotal > mostEndorsedAccount.getEndorsements().size()) {
-				MostEndorsedAccount = i;
+			//if (endorseTotal > mostEndorsedAccount.getEndorsements().size()) {
+			if (endorseTotal > mostEndorsements) {
+				mostEndorsedAccount = i;
+				mostEndorsements = endorseTotal;
 			}
 		}
 
-		return MostEndorsedAccount.getID();
+		return mostEndorsedAccount.getID();
 	}
 
 	@Override
