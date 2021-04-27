@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 import socialmedia.AccountIDNotRecognisedException;
 import socialmedia.HandleNotRecognisedException;
 import socialmedia.SocialMedia;
@@ -65,13 +67,23 @@ public class SocialMediaPlatformTestApp {
 			platform.endorsePost("greatdude456", 1);
 			platform.createPost("greatdude456","pogchamp");
 			platform.endorsePost("coolman123", 6);
+			platform.endorsePost("coolman123", 6);
+
+
+			System.out.println("Comment Posts: " +platform.getTotalCommentPosts());
+			System.out.println("Original Posts: " + platform.getTotalOriginalPosts());
+			System.out.println("Endorsement Posts: " + platform.getTotalEndorsmentPosts());
+			System.out.println("Most endorsed Post: " + platform.getMostEndorsedPost());
+			System.out.println("Most endorsed Account: " + platform.getMostEndorsedAccount());
 
 
 			platform.testWorks();
 
-			platform.deletePost(7);
+			//platform.deletePost(1);
 
-			platform.testWorks();
+
+
+			//platform.testWorks();
 
 		} catch (IllegalHandleException e) {
 			e.printStackTrace();
@@ -85,6 +97,8 @@ public class SocialMediaPlatformTestApp {
 			e.printStackTrace();
 		} catch (NotActionablePostException e) {
 			e.printStackTrace();
-		}
+		// } catch (IOException e) {
+		// 	e.printStackTrace();
+		} 
 	}
 }

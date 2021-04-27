@@ -86,8 +86,8 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public void removeAccount(int id) throws AccountIDNotRecognisedException {
 		
-		for (int i = 0; i < allAccounts.size(); i++) {
-			Account acc = allAccounts.get(i);
+		
+		for (Account acc : allAccounts) {
 			if (acc.getID() == id) {
 				// remove all posts of that user
 				for(Post post: allPosts) {
@@ -104,7 +104,7 @@ public class SocialMedia implements SocialMediaPlatform {
 					}
 				}
 				// remove the account
-				allAccounts.remove(i);
+				allAccounts.remove(acc);
 				return;
 			}
 		}
@@ -116,26 +116,21 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public void removeAccount(String handle) throws HandleNotRecognisedException {
 
-		for (int i = 0; i < allAccounts.size(); i++) {
-			Account acc = allAccounts.get(i);
+		
+		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
-				// remove all posts of that user
-				for(Post post: allPosts) {
-					if(post.getHandle() == handle) {
-						//for(Post child: post.getChildren()) {
-						//	post.removeChild(child);
-						//}
+				//remove all posts of that user
+				for(Post post: acc.getPosts()) {
 
-						try {
-                            deletePost(post.getID());
-                        } catch (PostIDNotRecognisedException e) {
-                            // if post id not recognized
-                            e.printStackTrace();
-                        }
+					try {
+						deletePost(post.getID());
+					} catch (PostIDNotRecognisedException e) {
+						e.printStackTrace();
 					}
+
 				}
 				// remove the account
-				allAccounts.remove(i);
+				allAccounts.remove(acc);
 				return;
 			}
 		}
@@ -225,10 +220,12 @@ public class SocialMedia implements SocialMediaPlatform {
 	public int endorsePost(String handle, int id) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
 		
 		// checking the handle
+		Account accountEndorsing = null;
 		Boolean isValidAccount = false;
 		for(Account acc: allAccounts) {
 			if(acc.getHandle() == handle) {
 				isValidAccount = true;
+				accountEndorsing = acc;
 			}
 		}
 		if(!isValidAccount) {
@@ -274,6 +271,9 @@ public class SocialMedia implements SocialMediaPlatform {
 		endorsed_post.addChild(child);
 		// add the endorsement to the list of posts.
 		allPosts.add(endorsement);
+
+		accountEndorsing.getPosts().add(endorsement);
+		
 
 		return id;
 	}
@@ -327,31 +327,40 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
 		//Boolean isValid = false;
-		for(int i = 0; i > allPosts.size(); i++) {
-			Post post = allPosts.get(i);
+		// for(int i = 0; i > allPosts.size(); i++) {
+		// 	Post post = allPosts.get(i);
+		for (Post post : allPosts) {
 			if(post.getID() == id) {
 				if(post.getChildren().size() > 0) {
 					Post newPost = new Post(null ,"The original content was removed from the system and is no longer available.");
-					newPost.setID(++postIDTally);
+					newPost.setID(-1);
 					for(Post p: post.getChildren()) {
 						if(p.getClass() == Endorsement.class) {
-							Endorsement endToAdd = (Endorsement)p;
-							post.removeEndorsement(endToAdd);
+							Endorsement endToRemove = (Endorsement)p;
+							
+							//post.removeEndorsement(endToRemove);
+							allPosts.remove(endToRemove);
+							
 						}
 						else {
 							if(p.getClass() == Comment.class) {
+								p.setHandle("Unavailable");
+								p.setContent("The original content was removed from the system and is no longer available.");
 								Comment c = (Comment)p;
 								c.setPostID(newPost.getID());
+								//deletePost(p.getID());
 							}
 						}
 					}
-					allPosts.remove(post);
-					return;
+					
 				}
+				allPosts.remove(post);
+				return;
 			// isValid = true;
 			// break;
 			}
 		}
+
 
 		throw new PostIDNotRecognisedException("ID not found in the list of posts");
 
@@ -368,7 +377,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (Post i : allPosts) {
 			if (i.getID() == id) {
 				//if id matches, construct string to return and then return it
-				outputString += "\n\nID: " + id;
+				outputString += "\nID: " + id;
 				outputString += "\nAccount: " + i.getHandle();
 				outputString += "\nNo. endorsements: " + i.getEndorsements().size();
 				//check if each child is a comment
@@ -546,6 +555,8 @@ public class SocialMedia implements SocialMediaPlatform {
 			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 			read = (ArrayList<Object>) objectIn.readObject();
 			objectIn.close();
+			allAccounts = (ArrayList<Account>) read.get(0);
+			allPosts = (ArrayList<Post>) read.get(1);
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		} catch(IOException e) {
@@ -553,24 +564,26 @@ public class SocialMedia implements SocialMediaPlatform {
 		} catch(ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		allAccounts = (ArrayList<Account>) read.get(0);
-		allPosts = (ArrayList<Post>) read.get(1);
+		
 	}
 
 	@Override
 	public void testWorks() {
 
-		System.out.println(allPosts.size());
-		System.out.println("All Posts:\n\n");
+		System.out.println("\ntotal number of posts: " + allPosts.size());
+		System.out.println("\n\nAll Posts:\n\n");
 
 		for (Post i : allPosts) {
 			try {
                 System.out.println(showIndividualPost(i.getID()));
             } catch (PostIDNotRecognisedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 		}
+
+
+		
+
 
 		// for (Post i : allPosts) {
 		// 	for (Post j : i.getChildren()) {
@@ -579,7 +592,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		// 	System.out.println("\nnew post\n");
 		// }
 
-		System.out.println("All Accounts");
+		System.out.println("\nAll Accounts:\n");
 
 		for (Account i : allAccounts) {
 			System.out.println(i.getHandle());

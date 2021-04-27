@@ -85,8 +85,9 @@ public class Post {
      */
     public void removeEndorsement(Endorsement endorsement) {
         for(Post post: children) {
-            if(post.getClass() == Endorsement.class && post == endorsement) {
+            if(post.getClass() == Endorsement.class && (Endorsement)post == endorsement) {
                 children.remove(post);
+                
             }
         }
     }
