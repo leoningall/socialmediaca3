@@ -18,8 +18,6 @@ public class Account {
     public Account(String handle, String description) {
         this.handle = handle;
         this.description = description;
-        this.posts = posts;
-
     }
     /**
      * This is the constructor method for Account.
@@ -27,7 +25,6 @@ public class Account {
      */
     public Account(String handle) {
         this.handle = handle;
-        this.posts = posts;
     }
     
     /**

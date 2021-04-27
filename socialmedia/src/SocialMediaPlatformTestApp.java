@@ -69,7 +69,7 @@ public class SocialMediaPlatformTestApp {
 
 			platform.testWorks();
 
-			platform.removeAccount("coolman123");
+			platform.deletePost(7);
 
 			platform.testWorks();
 

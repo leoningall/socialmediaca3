@@ -19,13 +19,6 @@ public class Post {
         this.content = content;
         this.handle = handle;
     }
-    /**
-     * This constructor is for generic posts.
-     * @param content The content of the Post
-     */
-    public Post(String content) {
-        this.content = content;
-    }
 
     /**
      * This gets the content of the Post
@@ -97,28 +90,6 @@ public class Post {
             }
         }
     }
-    /**
-     * I dont think this is needed anymore
-     */
-    /**
-     * public void removeChild(Post post) {
-        // iterate through the list of comments
-        for(int i=0; i<children.size(); i++) {
-            // if the comment matches
-            if(children.get(i) == post) {
-                // if that comment has comments
-                if(post.getChildren().size() > 0) {
-                    // iterate through that list
-                    for(Post p: post.getChildren()) {
-                        // recursively remove those comments 
-                        removeChild(p);
-                    }
-                }
-                comments.remove(comments.get(i));
-            }
-        }
-    }
-     */
     
     /**
      * This gets an ArrayList of all the endorsements of this Post

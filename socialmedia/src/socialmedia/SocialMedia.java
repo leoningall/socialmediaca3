@@ -326,13 +326,12 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		// TODO just realised this is wrong, didnt read the spec properly.
 		//Boolean isValid = false;
 		for(int i = 0; i > allPosts.size(); i++) {
 			Post post = allPosts.get(i);
 			if(post.getID() == id) {
 				if(post.getChildren().size() > 0) {
-					Post newPost = new Post("The original content was removed from the system and is no longer available.");
+					Post newPost = new Post(null ,"The original content was removed from the system and is no longer available.");
 					newPost.setID(++postIDTally);
 					for(Post p: post.getChildren()) {
 						if(p.getClass() == Endorsement.class) {
@@ -491,7 +490,6 @@ public class SocialMedia implements SocialMediaPlatform {
 	@Override
 	public int getMostEndorsedAccount() {
 		// Find account with the longest arraylist of endorsements.
-		// TODO There is maybe a better way to do this, its a tad ugly but should get the job done
 
 		//pick the first account in the list and assume it's the most endorsed
 		Account mostEndorsedAccount = allAccounts.get(0);
