@@ -92,9 +92,6 @@ public class SocialMedia implements SocialMediaPlatform {
 				// remove all posts of that user
 				for(Post post: allPosts) {
 					if(post.getHandle() == acc.getHandle()) {
-						//for(Post child: post.getChildren()) {
-						//	post.removeChild(child);
-						//}
 						try {
                             deletePost(post.getID());
                         } catch (PostIDNotRecognisedException e) {
@@ -326,9 +323,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		//Boolean isValid = false;
-		// for(int i = 0; i > allPosts.size(); i++) {
-		// 	Post post = allPosts.get(i);
+		
 		for (Post post : allPosts) {
 			if(post.getID() == id) {
 				if(post.getChildren().size() > 0) {
@@ -364,9 +359,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 		throw new PostIDNotRecognisedException("ID not found in the list of posts");
 
-		// if(!isValid) {
-		// 	throw new PostIDNotRecognisedException("ID not found in the list of posts");
-		// }
+		
 
 	}
 
@@ -394,25 +387,6 @@ public class SocialMedia implements SocialMediaPlatform {
 	public StringBuilder showPostChildrenDetails(int id)
 			throws PostIDNotRecognisedException, NotActionablePostException {
 		
-		/**
-		 * for(int = 0; i > allPosts.size(); i++) {
-			Post post = allPosts.get(i);
-			if(post.getID() == id) {
-				if(post.getChildren().size() > 0) {
-					for(Post child: post.getChildren()) {
-						showPostChildrenDetails(child.getID());	
-					}
-					childrenDetails.append(showIndividualPost(post.getID()));
-				}
-				childrenDetails.append(showIndividualPost(post.getID()));
-				
-			}
-
-		}			
-		String returnString = childrenDetails.toString();
-		childrenDetails = "";
-		return returnString;
-		 */
 		
 		boolean isValid = false;
         StringBuilder childrenDetails = new StringBuilder();
@@ -513,7 +487,6 @@ public class SocialMedia implements SocialMediaPlatform {
 				endorseTotal += j.getEndorsements().size();
 			}
 			//if this total is bigger than the current most, update most endorsed account
-			//if (endorseTotal > mostEndorsedAccount.getEndorsements().size()) {
 			if (endorseTotal > mostEndorsements) {
 				mostEndorsedAccount = i;
 				mostEndorsements = endorseTotal;
@@ -581,16 +554,6 @@ public class SocialMedia implements SocialMediaPlatform {
             }
 		}
 
-
-		
-
-
-		// for (Post i : allPosts) {
-		// 	for (Post j : i.getChildren()) {
-		// 		System.out.println(j.getClass() == Endorsement.class);
-		// 	}
-		// 	System.out.println("\nnew post\n");
-		// }
 
 		System.out.println("\nAll Accounts:\n");
 
