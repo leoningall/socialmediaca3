@@ -99,7 +99,7 @@ public interface SocialMediaPlatform extends MiniSocialMediaPlatform {
 	 */
 	int getTotalCommentPosts();
 
-	void testWorks();
+	
 
 	// End Management-related methods ****************************************
 

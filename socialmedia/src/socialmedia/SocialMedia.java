@@ -184,7 +184,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
 				// adds the id to the string
-				outputString += "\n\nID: " + Integer.toString(acc.getID());
+				outputString += "\nID: " + Integer.toString(acc.getID());
 				if(acc.getHandle() != null) {
 					// adds the handle to the string
 					outputString += "\nHandle: " + acc.getHandle();
@@ -195,10 +195,12 @@ public class SocialMedia implements SocialMediaPlatform {
 				}
 				// add the post count to the string
 				outputString += "\nPost Count: " + acc.getPosts().size();
+				return outputString;
 			}
-			throw new HandleNotRecognisedException("Handle not found in list of accounts.");
+			
 		}
-		return outputString;
+		throw new HandleNotRecognisedException("Handle not found in list of accounts.");
+		
 	}
 
 	@Override
@@ -559,27 +561,6 @@ public class SocialMedia implements SocialMediaPlatform {
 		
 	}
 
-	@Override
-	public void testWorks() {
-
-		System.out.println("\ntotal number of posts: " + allPosts.size());
-		System.out.println("\n\nAll Posts:\n\n");
-
-		for (Post i : allPosts) {
-			try {
-                System.out.println(showIndividualPost(i.getID()));
-            } catch (PostIDNotRecognisedException e) {
-                e.printStackTrace();
-            }
-		}
-
-
-		System.out.println("\nAll Accounts:\n");
-
-		for (Account i : allAccounts) {
-			System.out.println(i.getHandle());
-		}
-
-	}
+	
 
 }

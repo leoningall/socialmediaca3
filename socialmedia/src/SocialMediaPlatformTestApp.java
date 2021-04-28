@@ -56,7 +56,7 @@ public class SocialMediaPlatformTestApp {
 		
 		try {
 			
-			platform.createAccount("coolman123");
+			platform.createAccount("coolman123", "a very cool man");
 			platform.createPost("coolman123", "what a message");
 			platform.createAccount("greatdude456");
 			platform.commentPost("greatdude456", 1, "good post my friend");
@@ -74,14 +74,7 @@ public class SocialMediaPlatformTestApp {
 			System.out.println("Most endorsed Post: " + platform.getMostEndorsedPost());
 			System.out.println("Most endorsed Account: " + platform.getMostEndorsedAccount());
 
-
-			platform.testWorks();
-
-			//platform.deletePost(1);
-
-
-
-			//platform.testWorks();
+			System.out.println(platform.showAccount("coolman123"));
 
 		} catch (IllegalHandleException e) {
 			e.printStackTrace();
