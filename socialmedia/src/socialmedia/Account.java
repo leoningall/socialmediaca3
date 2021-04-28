@@ -2,11 +2,16 @@ package socialmedia;
 
 import java.util.ArrayList;
 
+/**
+ * This is the Account class
+ * @author Leon Ingall, Charles Pearman-Wright
+ * @version 1.0
+ */
+
 public class Account {
 
     private String handle;
     private String description;
-    //String name;
     private ArrayList<Post> posts = new ArrayList<Post>();
     private int id;
 

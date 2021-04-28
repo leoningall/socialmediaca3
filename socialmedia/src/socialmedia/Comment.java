@@ -2,6 +2,13 @@ package socialmedia;
 
 import java.util.ArrayList;
 
+/**
+ * This is the Comment class
+ * @author Leon Ingall, Charles Pearman-Wright
+ * @version 1.0
+ */
+
+
 public class Comment extends Post {
 
     private int postID;
@@ -51,24 +58,5 @@ public class Comment extends Post {
      */
     public void addChild(Post post) {children.add(post);}
     
-    /**
-     * public void removeChild(Post post) {
-        // iterate through the list of comments
-        for(int i=0; i<children.size(); i++) {
-            // if the comment matches
-            if(children.get(i) == post) {
-                // if that comment has comments
-                if(post.getChildren().size() > 0) {
-                    // iterate through that list
-                    for(Post p: post.getChildren()) {
-                        // recursively remove those comments 
-                        removeChild(p);
-                    }
-                }
-                children.remove(children.get(i));
-            }
-        }
-    }
-     */
     
 }

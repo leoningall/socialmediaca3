@@ -1,5 +1,11 @@
 package socialmedia;
 
+/**
+ * This is the Endorsement class
+ * @author Leon Ingall, Charles Pearman-Wright
+ * @version 1.0
+ */
+
 public class Endorsement extends Post {
 
     private int postID;

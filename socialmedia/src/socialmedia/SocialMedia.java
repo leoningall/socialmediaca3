@@ -30,6 +30,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		Boolean valid = true;
 
 		for (Account acc : allAccounts) {
+			// checks if the handle is already taken
 			if (acc.getHandle().equals(handle) ) {
 				valid = false;
 			}
@@ -60,6 +61,7 @@ public class SocialMedia implements SocialMediaPlatform {
 		Boolean valid = true;
 
 		for (Account acc : allAccounts) {
+			// checks if the handle is already taken
 			if (acc.getHandle().equals(handle) ) {
 				valid = false;
 			}
@@ -140,16 +142,19 @@ public class SocialMedia implements SocialMediaPlatform {
 	public void changeAccountHandle(String oldHandle, String newHandle)
 			throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException {
 		
+				// checks if the new handle is valid
 				if ((newHandle.length()) == 0 || (newHandle.length() > 30)) {
 					throw new InvalidHandleException("New handle must be between 0 and 30 characters");
 				}
 		
+				// checks if the new handle is valid
 				if (newHandle.contains(" ")) {
 					throw new InvalidHandleException("New handle can't contain whitespace.");
 				}
 
 				for (Account acc : allAccounts) {
 					if (acc.getHandle() == oldHandle) {
+						// sets the new handle
 						acc.setHandle(newHandle);
 						return;
 					}
@@ -163,6 +168,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	public void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
 		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
+				// sets the description
 				acc.setDescription(description);
 				return;
 			}
@@ -173,26 +179,32 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public String showAccount(String handle) throws HandleNotRecognisedException {
+		
+		String outputString = "";
 		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
-				
-				System.out.println("\n\nID: " + Integer.toString(acc.getID()));
+				// adds the id to the string
+				outputString += "\n\nID: " + Integer.toString(acc.getID());
 				if(acc.getHandle() != null) {
-					System.out.println("Handle: " + acc.getHandle());
+					// adds the handle to the string
+					outputString += "\nHandle: " + acc.getHandle();
 				}
 				if (acc.getDescription() != null) {
-					System.out.println("Description: " + acc.getDescription());
+					// adds the description to the string
+					outputString += "\nDescription: " + acc.getDescription();
 				}
-				System.out.println("Post Count: " + acc.getPosts().size());
+				// add the post count to the string
+				outputString += "\nPost Count: " + acc.getPosts().size();
 			}
 			throw new HandleNotRecognisedException("Handle not found in list of accounts.");
 		}
-		return null;
+		return outputString;
 	}
 
 	@Override
 	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
 
+		// checks id the message is valid
 		if (message.length() == 0 || message.length() > 100) {
 			throw new InvalidPostException("Message must be between 1 and 100 characters.");
 		}
@@ -200,7 +212,9 @@ public class SocialMedia implements SocialMediaPlatform {
 		for (Account acc : allAccounts) {
 			if (acc.getHandle() == handle) {
 				int id = ++postIDTally;
+				// creates the post
 				Post post = new Post(message, handle);
+				// sets all the attributes
 				post.setID(id);
 				acc.getPosts().add(post);
 				allPosts.add(post);
@@ -245,7 +259,6 @@ public class SocialMedia implements SocialMediaPlatform {
 			throw new PostIDNotRecognisedException("ID not found in the list of posts");
 		}
 
-		// checking if the post is an endorsement
 
 		Endorsement endorsement = new Endorsement(handle, id);
 
@@ -280,10 +293,7 @@ public class SocialMedia implements SocialMediaPlatform {
 	
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException,
-			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
-
-		// theres an error in here that fucks up everything, and makes all the throwing Exceptions go white.
-	
+			PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {	
 		
 		// check if the handle is correct
 		Boolean isValidAccount = false;
@@ -311,11 +321,15 @@ public class SocialMedia implements SocialMediaPlatform {
 				break;
 			}
 		}
+		// throws the Exception
 		if(isValidPostID == false) {
 			throw new PostIDNotRecognisedException("ID not found in the list of posts");
 		}
 
+		// creates the Comment
 		Comment comment = new Comment(handle, id, message);
+
+		// sets the attributes
 		comment.setID(++postIDTally);
 
 		post.addChild(comment);
@@ -329,18 +343,20 @@ public class SocialMedia implements SocialMediaPlatform {
 		
 		for (Post post : allPosts) {
 			if(post.getID() == id) {
+				// checks if the post has children 
 				if(post.getChildren().size() > 0) {
 					Post newPost = new Post(null ,"The original content was removed from the system and is no longer available.");
 					newPost.setID(-1);
 					for(Post p: post.getChildren()) {
+						// removes the endorsements
 						if(p.getClass() == Endorsement.class) {
 							Endorsement endToRemove = (Endorsement)p;
 							
-							//post.removeEndorsement(endToRemove);
 							allPosts.remove(endToRemove);
 							
 						}
 						else {
+							// changes the Comments' parent
 							if(p.getClass() == Comment.class) {
 								p.setHandle("Unavailable");
 								p.setContent("The original content was removed from the system and is no longer available.");
@@ -354,8 +370,6 @@ public class SocialMedia implements SocialMediaPlatform {
 				}
 				allPosts.remove(post);
 				return;
-			// isValid = true;
-			// break;
 			}
 		}
 
@@ -406,6 +420,7 @@ public class SocialMedia implements SocialMediaPlatform {
                 if (post.getID() == id) {
                     for (Post child : post.getChildren()) {
 						if(child.getClass() == Comment.class) {
+							// recursively adds to the StringBuilder
 							childrenDetails.append(showPostChildrenDetails(child.getID()) + "\n" + "|" + "\n" + "| > ");
 						}
                     }
@@ -501,6 +516,7 @@ public class SocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public void erasePlatform() {
+		// clear all the attributes
 		allAccounts.clear();
 		allPosts.clear();
 		counter = 0;

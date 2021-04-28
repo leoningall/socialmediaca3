@@ -2,13 +2,18 @@ package socialmedia;
 
 import java.util.ArrayList;
 
+/**
+ * This is the Post class
+ * @author Leon Ingall, Charles Pearman-Wright
+ * @version 1.0
+ */
+
 public class Post {
 
     private String content;
     private String handle;
     private ArrayList<Post> children = new ArrayList<Post>();
     private int id;
-    // added a list of endorsements, we might not need it, but its there just in case.
 
     /**
      * This is the contstructor method of Post
@@ -84,8 +89,11 @@ public class Post {
      * @param endorsement The endorsement to be removed
      */
     public void removeEndorsement(Endorsement endorsement) {
+        // Iterates through the children ArrayList
         for(Post post: children) {
+            // checks if it's an Endorsement
             if(post.getClass() == Endorsement.class && (Endorsement)post == endorsement) {
+                // removes it
                 children.remove(post);
                 
             }
@@ -99,23 +107,22 @@ public class Post {
     public ArrayList<Endorsement> getEndorsements() {
         ArrayList<Endorsement> endorsements = new ArrayList<>();
         for(Post post: children) {
+            // checks if it's an Endorsement
             if(post.getClass() == Endorsement.class) {
+                // adds it to the list
                 Endorsement e = (Endorsement)post;
                 endorsements.add(e);
             }
         }
         return endorsements;
     }
-    /**
-     * public void addEndorsement(Endorsement endorsement) {
-        children.add(endorsement);
-        }
-     */
     
     public ArrayList<Comment> getComments() {
         ArrayList<Comment> comments = new ArrayList<>();
         for(Post post: children) {
+            // checks if it's a comment
             if(post.getClass() == Comment.class) {
+                // adds it to the list
                 Comment e = (Comment)post;
                 comments.add(e);
             }
