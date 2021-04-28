@@ -9,10 +9,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
- * BadSocialMedia is a minimally compiling, but non-functioning implementor of
+ * SocialMedia is a compiling, functioning implementor of
  * the SocialMediaPlatform interface.
  * 
- * @author Diogo Pacheco
+ * @author Leon Ingall, Charles Pearman-Wright
  * @version 1.0
  */
 
@@ -265,6 +265,9 @@ public class SocialMedia implements SocialMediaPlatform {
 		// add the endorsement as a child of the post it is endorsing.
 		Post child = endorsement;
 		// endorsed_post.addChild(endorsement);
+		if (endorsed_post.getClass() == Comment.class) {
+			endorsed_post = (Comment)endorsed_post;
+		}
 		endorsed_post.addChild(child);
 		// add the endorsement to the list of posts.
 		allPosts.add(endorsement);

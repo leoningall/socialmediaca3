@@ -12,12 +12,10 @@ import socialmedia.SocialMediaPlatform;
 
 /**
  * A short program to illustrate an app testing some minimal functionality of a
- * concrete implementation of the SocialMediaPlatform interface -- note you will
- * want to increase these checks, and run it on your SocialMedia class (not the
- * BadSocialMedia class).
+ * concrete implementation of the SocialMediaPlatform interface
  *
  * 
- * @author Diogo Pacheco
+ * @author Diogo Pacheco, Leon Ingall, Charles Pearman-Wright
  * @version 1.0
  */
 public class SocialMediaPlatformTestApp {
@@ -32,7 +30,7 @@ public class SocialMediaPlatformTestApp {
 
 		SocialMediaPlatform platform = new SocialMedia();
 
-		/*
+		
 
 		assert (platform.getNumberOfAccounts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
 		assert (platform.getTotalOriginalPosts() == 0) : "Innitial SocialMediaPlatform not empty as required.";
@@ -55,7 +53,7 @@ public class SocialMediaPlatformTestApp {
 			assert (false) : "AccountIDNotRecognizedException thrown incorrectly";
 		}
 
-		*/
+		
 		try {
 			
 			platform.createAccount("coolman123");
