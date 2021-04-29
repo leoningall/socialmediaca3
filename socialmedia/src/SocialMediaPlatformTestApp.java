@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 import socialmedia.AccountIDNotRecognisedException;
 import socialmedia.HandleNotRecognisedException;
 import socialmedia.SocialMedia;
